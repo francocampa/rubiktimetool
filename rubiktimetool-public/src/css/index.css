@@ -1,0 +1,18 @@
+:root{
+    --primary: #353A47;
+    --error: #F24236;
+    --warning: #F5F749;
+    --bg-1:#232630;
+    color: #c9c9c9;
+}
+.light{
+    --bg-1: #b3b6c0;
+    color: #2b2b2b;
+}
+*{
+    box-sizing: border-box;
+}
+html,body,#root{
+    margin: 0;
+    height: 100%;
+}
