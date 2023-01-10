@@ -72,7 +72,7 @@ export default class Cube3x3x3 {
         cube = this.moveXFace(cube, move);
       }
     });
-    return cube;
+    return this.getDisplayCube(cube);
   }
   static getBaseCube(n) {
     let cube = [];

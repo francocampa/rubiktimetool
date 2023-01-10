@@ -6,4 +6,7 @@ export default class Solve {
     this.penalties = data.penalties || {};
     this.comment = data.comment || null;
   }
+  static addSolve(solve) {}
+  static updateSolve(solve) {}
+  static deleteSolve(solve) {}
 }

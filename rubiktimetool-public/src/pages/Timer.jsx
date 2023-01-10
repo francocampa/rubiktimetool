@@ -1,48 +1,41 @@
 import { useTranslation } from "react-i18next";
-import DNxNxN from "../components/cubeDisplays/NxNxN";
-import NxNxN from "../controllers/cubes/NxNxN";
+import DNxNxN from "@/components/cubeDisplays/NxNxN";
+import categoryManager from "@/controllers/categoryManager";
+import Timer from "@/components/timer/Timer"
 import { useState, useEffect } from "react";
-import "../css/timer.css";
+import "@/css/timer.css";
 
-export default function Timer() {
-  const [t, i18n] = useTranslation("global");
-  const [n, setN] = useState(3);
-  let s = NxNxN.generateScramble(n);
+export default function TimerPage(props) {
+  if (!props || !Object.keys(props).length) return (<h1>loading</h1>)
+  
+  const [t, i18n] = useTranslation("global")
+  let s = categoryManager.getScramble(props.cat);
 
   const [scramble, setScramble] = useState(s);
-  const [cube, setCube] = useState(NxNxN.getScrambledCube(n, s));
+  const [cube, setCube] = useState(categoryManager.getDisplay(props.cat, s));
+  const [times, setTimes] = useState([]);
+  const [isOnSolve, setIsOnSolve] = useState(false);
+
   useEffect(() => {
-    s = NxNxN.generateScramble(n);
-    setCube(NxNxN.getScrambledCube(n, s));
-    setScramble(s);
-  }, [n]);
+    setCube(categoryManager.getDisplay(props.cat, scramble))
+  }, [scramble]);
+
+  function startTimer() {
+    setIsOnSolve(true);
+  }
+  function stopTimer(time) {
+    setIsOnSolve(false);
+    setTimes(prev => [...prev, time])
+  }
   return (
     <>
       <h1>{t("Timer")}</h1>
-      <button onClick={() => setScramble(NxNxN.generateScramble(n))}>
+      <button onClick={() => setScramble(categoryManager.getScramble(props.cat))} {...isOnSolve && "disabled"}>
         New Scramble
       </button>
-      <button onClick={() => setCube((prev) => NxNxN.moveXFace(prev, "U"))}>
-        Move U
-      </button>
-      <button onClick={() => setCube((prev) => NxNxN.moveXFace(prev, "D"))}>
-        Move D
-      </button>
-      <button onClick={() => setCube((prev) => NxNxN.moveYFace(prev, "R"))}>
-        Move R
-      </button>
-      <button onClick={() => setCube((prev) => NxNxN.moveYFace(prev, "L"))}>
-        Move L
-      </button>
-      <button onClick={() => setCube((prev) => NxNxN.moveZFace(prev, "F"))}>
-        Move F
-      </button>
-      <button onClick={() => setCube((prev) => NxNxN.moveZFace(prev, "B"))}>
-        Move B
-      </button>
-      <input type="number" value={n} onChange={(e) => setN(e.target.value)} />
+      <Timer start={startTimer} stop={stopTimer} />
       <p className="scramble">{scramble.map((move) => move + " ")}</p>
-      <DNxNxN cube={NxNxN.getDisplayCube(cube)} />
+      <DNxNxN cube={cube} />
     </>
   );
 }
